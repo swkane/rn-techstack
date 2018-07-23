@@ -10,6 +10,12 @@ import { CardSection } from "./common/CardSection";
 import * as actions from "../actions";
 
 class ListItem extends React.Component {
+  // this.state.hide is used to toggle a showing card without updating redux
+  state = { hide: true };
+  handlePress = () => {
+    this.setState({ hide: !this.state.hide });
+    this.props.selectLibrary(this.props.library.item.id);
+  };
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
   }
@@ -18,16 +24,17 @@ class ListItem extends React.Component {
     const { expanded } = this.props;
     const { id, title, description } = this.props.library.item;
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.selectLibrary(id)}>
+      <TouchableWithoutFeedback onPress={this.handlePress}>
         <View>
           <CardSection>
             <Text style={titleStyle}>{title}</Text>
           </CardSection>
-          {expanded && (
-            <CardSection>
-              <Text>{description}</Text>
-            </CardSection>
-          )}
+          {this.state.hide &&
+            expanded && (
+              <CardSection>
+                <Text>{description}</Text>
+              </CardSection>
+            )}
         </View>
       </TouchableWithoutFeedback>
     );
